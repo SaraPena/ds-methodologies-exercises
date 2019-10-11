@@ -41,26 +41,26 @@ def read_sql_file():
     df = pd.read_sql(query, url)
     return df
 
-read_sql_file()
+tc = read_sql_file()
 
 # Gather infomation about data
-tc.head()
-tc.shape
-tc.describe()
-tc.info()
+# tc.head()
+# tc.shape
+# tc.describe()
+# tc.info()
 
-tc.isnull().sum()
+# tc.isnull().sum()
 
-tc.columns[tc.isnull().any()]
+# tc.columns[tc.isnull().any()]
 
-tc.total_charges.value_counts(sort=True, ascending=True)
+# tc.total_charges.value_counts(sort=True, ascending=True)
 
-tc.replace(r'^\s*$', np.nan, regex=True, inplace=True)
-tc.info()
+# tc.replace(r'^\s*$', np.nan, regex=True, inplace=True)
+# tc.info()
 
-tc = tc.dropna()
+# tc = tc.dropna()
 
-tc['total_charges'] = pd.to_numeric(tc.total_charges, errors = 'coerce').astype('float')
+# tc['total_charges'] = pd.to_numeric(tc.total_charges, errors = 'coerce').astype('float')
 
 def wrangle_telco():
     """ Handle dtypes, and empty values in dataframe (df) """
@@ -71,5 +71,5 @@ def wrangle_telco():
     df = df.dropna()
     return df
 
-wrangle_telco().info()
+# wrangle_telco().info()
 
