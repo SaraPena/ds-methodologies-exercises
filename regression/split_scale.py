@@ -109,6 +109,27 @@ def gaussian_scaler(X):
     test_scaled_data = pd.DataFrame(scaler.transform(test), columns = test.columns.values).set_index([test.index.values])
     return scaler, train_scaled_data, test_scaled_data
 
-X_scaler, X_train_scaled_data, X_test_scaled_data = gaussian_scaler(X)
-y_scaler, y_train_scaled_data, y_test_scaled_data = gaussian_scaler(y)
+# X_scaler, X_train_scaled_data, X_test_scaled_data = gaussian_scaler(X)
+# y_scaler, y_train_scaled_data, y_test_scaled_data = gaussian_scaler(y)
+
+# min_max_scaler()
+def min_max_scaler(X):
+    test, train = split_my_data(X)
+    scaler = MinMaxScaler(copy = True, feature_range = (0,1)).fit(train)
+    train_scaled_data = pd.DataFrame(scaler.transform(train), columns = train.columns.values).set_index([train.index.values])
+    test_scaled_data = pd.DataFrame(scaler.transform(test), columns = test.columns.values).set_index([test.index.values])
+    return scaler, train_scaled_data, test_scaled_data
+
+# X_scaler, X_train_scaled_data, X_test_scaled_data = min_max_scaler(X)
+# y_scaler, y_train_scaled_data, y_test_scaled_data = min_max_scaler(y)
+
+def iqr_robust_scaler(X):
+    train, test = split_my_data(X)
+    scaler = RobustScaler(quantile_range = (25.0,75.0),copy = True, with_centering = True, with_scaling = True).fit(train)
+    train_scaled_data = pd.DataFrame(scaler.transform(train), columns = train.columns.values).set_index([train.index.values])
+    test_scaled_data = pd.DataFrame(scaler.transform(test), columns = test.columns.values).set_index([test.index.values])
+    return scaler, train_scaled_data, test_scaled_data
+
+# X_scaler, X_train_scaled_data, X_test_scaled_data = iqr_robust_scaler(X)
+# y_scaler, y_train_scaled_data, y_test_scaled_data = iqr_robust_scaler(y)
 
