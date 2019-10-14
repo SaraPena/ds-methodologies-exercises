@@ -34,8 +34,9 @@ url = get_db_url('telco_churn')
 def read_sql_file():
     """use pd.read_sql to create your dataframe (df).
     \nParameters: query (SQL format), url (name directly or use get_db_url()) """
-    query = """SELECT customer_id, monthly_charges, tenure, total_charges
-               FROM customers
+    query = """SELECT * 
+               FROM customers as c 
+               JOIN internet_service_types as i USING (internet_service_type_id)
                WHERE contract_type_id = 3 """
     
     df = pd.read_sql(query, url)
@@ -43,6 +44,8 @@ def read_sql_file():
 
 tc = read_sql_file()
 
+
+tc = pd.read_sql("SELECT * FROM customers as c JOIN internet_service_types as i on c.internet_service_type_id = i.internet_service_type_id",url)
 # Gather infomation about data
 # tc.head()
 # tc.shape
@@ -69,7 +72,9 @@ def wrangle_telco():
     df.replace(r'^\s*$', np.nan, regex = True, inplace=True)
     df['total_charges'] = pd.to_numeric(df.total_charges, errors = 'coerce').astype('float')
     df = df.dropna()
+    df = df.drop(columns = 'internet_service_type_id').set_index('customer_id')
     return df
 
-# wrangle_telco().info()
+#wrangle_telco().info()
+
 
