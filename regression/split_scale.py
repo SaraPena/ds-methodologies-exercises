@@ -27,17 +27,17 @@ import wrangle
 import env
 
 # acquire data and remove null values.
-df = wrangle.wrangle_telco()
+# df = wrangle.wrangle_telco()
 
 # verify acquisition
-df.info()
+# df.info()
 
-df.describe()
+# df.describe()
 
 # Create dataframes for independent variables (X) and target variables (y)
 
-X = df.drop(columns = 'total_charges').set_index('customer_id')
-y = pd.DataFrame({'total_charges': df.total_charges, 'customer_id': df.customer_id}).set_index('customer_id')
+#X = df.drop(columns = 'total_charges').set_index('customer_id')
+#y = pd.DataFrame({'total_charges': df.total_charges, 'customer_id': df.customer_id}).set_index('customer_id')
 
 # 1. split_my_data(X)
 def split_my_data(X):
@@ -45,8 +45,8 @@ def split_my_data(X):
     train, test = train_test_split(X, train_size =.80, random_state = 123)
     return train, test
 
-X_train, X_test = split_my_data(X)
-y_train, y_test = split_my_data(y)
+#X_train, X_test = split_my_data(X)
+#y_train, y_test = split_my_data(y)
 
 
 # X_train set_index to "customer_id"
