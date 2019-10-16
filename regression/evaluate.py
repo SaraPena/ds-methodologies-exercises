@@ -107,6 +107,7 @@ def better_than_baseline(x,y,df):
     sse_baseline = (df_baseline_error[df_baseline_error.metric == 'SSE']).baseline_error.sum()
     return sse_model < sse_baseline
 
+
 better_than_baseline(df.total_bill, df.tip, df)
 
 # 8. Write a function, model_significance(ols_model), that takes the ols model as input and returns the amount of variance explained in your model, and the value telling you whether the correlation between the model and the tip value are statistically significant.
@@ -122,3 +123,5 @@ def model_significance(ols_model):
     return f'evs: {evs:.4f}, f_pval: {f_pval}'
 
 model_significance(ols_model)
+
+
