@@ -25,36 +25,50 @@ df.dtypes
 
 df = df[['monthly_charges', 'tenure', 'total_charges']]
 
+sns.pairplot(data = df)
+
 train, test = split_scale.split_my_data(df)
 
 # split into train and test
 # For feature engineering methods, we want to use the scaled data:
 # scale the data using standard scaler
 
-scaler, train_scaled_data, test_scaled_data = split_scale.standard_scaler(df)
+scaler, train_scaled_data, test_scaled_data = \
+    split_scale.standard_scaler(df)
 
+train_scaled_data['filler'] = -1
+test_scaled_data['filler'] = -1
+
+test['filler'] = -1
+train['filler'] = -1
+
+X_train = train[['monthly_charges','tenure','filler']]
+y_train = train[['total_charges']]
+
+X_train_scaled_data = train_scaled_data[['monthly_charges', 'tenure','filler']]
+y_train_scaled_data = train_scaled_data[['total_charges']]
 # to return to orignal values
 # scaler, train, test = split_scale.scaler_inverse(df)
 
-X_train = train.drop(columns = 'total_charges')
-y_train = train[['total_charges']]
+# X_train = train.drop(columns = 'total_charges')
+# y_train = train[['total_charges']]
 
-X_test = test.drop(columns = 'total_charges')
-y_test = test[['total_charges']]
+# X_test = test.drop(columns = 'total_charges')
+# y_test = test[['total_charges']]
 
 # Using Pearson Correlation
 
-sns.set_style('whitegrid')
-plt.figure(figsize=(6,5))
-cor = train.corr()
-sns.heatmap(cor, annot = True, cmap=plt.cm.Reds)
+# sns.set_style('whitegrid')
+# plt.figure(figsize=(6,5))
+# cor = train.corr()
+# sns.heatmap(cor, annot = True, cmap=plt.cm.Reds)
 
 # To view just the correlations of each attribute with the target variable, and filter down to only those above a certain value:
 # Correlation with output variable
-cor_target = abs(cor["total_charges"])
+# cor_target = abs(cor["total_charges"])
 
 #Selecting highly correlated features
-relevant_features = cor_target[cor_target>0.5]
+# relevant_features = cor_target[cor_target>0.5]
 
 # Looking at the correlation of each of these variables, monthly_charges is most correlated with total_charges. Tenure and monthly_charges are correlated with each other.
 # So using this method, we may decide to only use monthly_charges or we may want to create a new variable that uses monthly_charges and tenure.
@@ -73,22 +87,20 @@ def select_k_best_freg_unscaled(X_train,y_train,k):
     f_feature = X_train.loc[:,f_support].columns.tolist()
     return f_feature
 
-# select_k_best_freg_unscaled(X_train,y_train,2)
+# select_k_best_freg_unscaled(X_train_scaled_data,y_train_scaled_data,2)
 
 # 2. Write a function, select_kbest_freg() that takes X_train, y_train(scaled) and k as in put and returns a list of the top k features.
 
 def select_kbest_freg_scaled(X_train, y_train, k):
-    X_scaler, X_train_scaled_data, X_test_scaled_data = split_scale.standard_scaler(X_train)
-    y_scaler, y_train_scaled_data, y_test_scaled_data = split_scale.standard_scaler(y_train)
-
-    f_selector = SelectKBest(f_regression,k=k)
+    
+    f_selector = SelectKBest(f_regression,k=2)
     f_selector.fit(X_train_scaled_data, y_train_scaled_data)
 
     f_support = f_selector.get_support()
     f_feature = X_train_scaled_data.loc[:,f_support].columns.tolist()
     return f_feature
 
-# select_kbest_freg_scaled(X_train, y_train, 2)
+# select_kbest_freg_scaled(X_train_scaled, y_train_scaled, 2)
 
 # 3. Write a function, ols_backward_elimination() that takes X_train and y_train(scaled) as input and returns selected features based on the ols backwards elimation method.
 
@@ -96,7 +108,6 @@ import statsmodels.api as sm
 
 def ols_backward_elimination(X_train, y_train):
     cols = list(X_train.columns)
-    pmax = 1
     while (len(cols)>0):
         model = sm.OLS(y_train, X_train).fit()
         p = pd.Series(model.pvalues.values[0:], index = cols)
@@ -109,7 +120,7 @@ def ols_backward_elimination(X_train, y_train):
     selected_features_BE = cols
     return selected_features_BE
 
-#ols_backward_elimination(X_train,y_train)
+ols_backward_elimination(X_train,y_train)
 
 #ols_backward_elimination(X_train_scaled_data,y_train_scaled_data)
 
@@ -128,7 +139,7 @@ def lasso_cv_coef(X_train, y_train):
     plt.title("Feature importance using Lasso Model")
     return imp_coef
 
-lasso_cv_coef(X_train_scaled_data, y_train_scaled_data)
+#lasso_cv_coef(X_train_scaled_data, y_train_scaled_data)
 
 # 5. Write 3 functions, the first computes the number of optimum features (n) using rfe, the second takes n as input and returns the top n features, and the third takes the list of the top n features as input and returns a new X_train, and X_test dataframe with those top features, recursive_feature_elimination() that computes the optimum number of features (n) and returns the top n features.
 from sklearn.linear_model import LinearRegression
@@ -155,12 +166,12 @@ def recursive_feature_elimination(n, X_train,y_train,y_test):
             number_of_features = number_of_features_list[n]
         return number_of_features, high_score
 
-recursive_feature_elimination(2, X_train, y_train, y_test)
+#recursive_feature_elimination(2, X_train, y_train, y_test)
 
-def recursive_feature_selection(number_of_features)
-    cols = list(X_train.columns)
-    model = LinearRegression()
-    rfe = RFE(model,1)
-    X_rfe = rfe.fit_transform(X_train,y_train)
-    model.fit(X_rfe,y_train)
-    temp = pd.Series(rfe.support_)
+# def recursive_feature_selection(number_of_features)
+#     cols = list(X_train.columns)
+#     model = LinearRegression()
+#     rfe = RFE(model,1)
+#     X_rfe = rfe.fit_transform(X_train,y_train)
+#     model.fit(X_rfe,y_train)
+#     temp = pd.Series(rfe.support_)
