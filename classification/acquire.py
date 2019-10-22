@@ -37,5 +37,10 @@ def get_train_data():
     csv_export_url = sheet_url.replace('/edit#gid=', '/export?format=csv&gid=')
     return pd.read_csv(csv_export_url)
     
-def get_titanic_data(db):
-    return pd.read_sql('SELECT * FROM passengers', get_db_url(db))
+def get_titanic_data():
+    return pd.read_sql('SELECT * FROM passengers', get_db_url('titanic_db'))
+
+
+def get_iris_data():
+    return pd.read_sql('SELECT * FROM measurements JOIN species using (species_id)', get_db_url('iris_db'))
+
