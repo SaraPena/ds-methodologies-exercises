@@ -12,7 +12,7 @@ def get_db_url(db):
 # Example:
 # url = get_db_url('zillow')
 
-def get_data_from_mysql():
+def get_zillow_data():
     """use pd.read_sql to get data from query variable that is a syntatically correct sql query, and db tha is an existing database on your sql host
         \n returns dataframe of query """
         
@@ -37,9 +37,13 @@ def get_data_from_mysql():
 # df = get_data_from_mysql()
 # df.head()
 
+def get_mallcustomer_data():
+    df = pd.read_sql('SELECT * FROM customers', get_db_url('mall_customers'))
+    return df.set_index('customer_id')
 
-
-
+# Example:
+# df = get_mallcustomer_data()
+# df.head()
 
 
 
