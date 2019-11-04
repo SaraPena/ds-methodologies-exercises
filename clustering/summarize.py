@@ -61,6 +61,40 @@ def nulls_by_row(df):
 #Test
 # nulls_by_row(df)
 
+def df_value_counts(df):
+    for col in df.columns:
+        print(f'{col}:')
+        if df[col].dtype == 'object':
+            col_count = df[col].value_counts()
+        else:
+            if df[col].nunique() >= 35:
+                col_count = df[col].value_counts(bins=10, sort = False)
+            else:
+                col_count = df[col].value_counts()
+        print(col_count)
+        print('\n')
+
+# Test
+# df_value_counts(df)
+
+def df_summary(df):
+    print(f'--- Shape:{df.shape}')
+    print('\n--- Info :')
+    df.info()
+    print('\n--- Descriptions:')
+    print(df.describe(include='all'))
+    print(f'\n--- Nulls by Column: \n {nulls_by_col(df)}')
+    print('\n--- Value Counts:\n')
+    print(df_value_counts(df))
+
+# Test
+# df_summary(df)
+
+
+
+
+
+
 
 
 
