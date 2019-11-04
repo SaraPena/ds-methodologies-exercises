@@ -15,5 +15,17 @@ import seaborn as sns
 pd.options.display.float_format = '{:20,.2f}'.format
 
 import acquire
+import prepare
+
+def wrangle_zillow_data():
+    df = acquire.get_data_from_mysql()
+    df = prepare.zillow_single_unit(df)
+    df = prepare.remove_columns(df,['finishedsquarefeet12','fullbathcnt', 'unitcnt','structuretaxvaluedollarcnt','landtaxvaluedollarcnt', 'assessmentyear', 'propertyzoningdesc'])
+    df = prepare.handle_missing_values(df)
+    df.dropna(inplace=True)
+    return df
+
+wrangle_zillow_data()
+
 
 
