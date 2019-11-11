@@ -5,6 +5,7 @@ Perform at least 1 t-test, and 1 chi square test.
 
 
 import seaborn as sns
+sns.set_style('whitegrid')
 
 import warnings
 warnings.filterwarnings("ignore")
@@ -19,6 +20,7 @@ from math import sqrt
 import scipy.stats as stats
 
 import matplotlib
+plt.rc('font', size=14)
 import matplotlib.pyplot as plt
 from matplotlib import cm
 from sklearn.model_selection import learning_curve
@@ -29,12 +31,14 @@ from sklearn.model_selection import learning_curve
 # Load the dataset:
 df = sns.load_dataset('tips')
 
-
+# Explore data types, and statistics of tips
 df.info()
 
 df.describe()
 
-df.hist()
+# Create histogram plot
+df.hist(color='black')
+
 sns.boxplot(data=df)
 
 sns.jointplot(x='tip',y='total_bill', data=df)
