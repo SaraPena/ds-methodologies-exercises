@@ -27,22 +27,31 @@ import summarize
 import prepare
 import wrangle_zillow
 
+# Use wrangle_zollow to bring in zillow dataset
 df = wrangle_zillow.wrangle_zillow_data()
+
+# Look at datatypes of zillow
 df.info()
+
+# Look at fips variable
 df.fips.value_counts()
+
+# drop the id column and set the parcelid to be the index of zillow
 df.drop(columns = ['id'], inplace = True)
 df.set_index('parcelid', inplace = True)
 df. head()
 
 # Split data:
-train, test = train_test_split(df, random_state = 42)
+train, test = train_test_split(df, test_size = .3, random_state = 42)
 
-
+# Use MinMaxScaler to scale variables that are number types.
 scaler = MinMaxScaler()
 num_vars = list(train.select_dtypes('number').columns)
 train[num_vars] = scaler.fit_transform(train[num_vars])
 
 train.select_dtypes('number').hist(figsize = (16,12), bins = 5, color = 'blue')
+
+sns.pairplot(train)
 
 plt.figure(figsize = (24,8))
 sns.boxplot(data=train)
