@@ -61,7 +61,6 @@ temp_var = min_max[['temp_diff']].resample('M').mean()
 temp_var[temp_var.temp_diff == max(temp_var.temp_diff)]
 
 # Use the dataset to answer the following questions:
-from vega_datasets import data
 
 # Which year and month combination has the highest amount of precipitation
 df = data.seattle_weather().set_index('date')
@@ -77,5 +76,24 @@ df.resample('M').sum()['precipitation'].plot(color='blue')
 # Visualize the amount of wind over time. Choose a time interval you think is appropriate?
 df.resample('M').mean()['wind'].plot(color = 'black')
 
+wind_months = df.resample('D').max().resample('M').mean()['wind']
 
+wind_months[wind_months == max(wind_months)]
+
+wind_mean = df.resample('D').mean().resample('M').mean()['wind']
+wind_mean[wind_mean == max(wind_mean)]
+
+# What's the sunniest year? (Hint: which day has the highest number of days where weather == sun)
+sun_yearly = df[['weather']][df.weather == 'sun'].resample('Y').count()
+sun_yearly[sun_yearly.weather == max(sun_yearly.weather)].reset_index()['date'].dt.year[0]
+list(sun_yearly[sun_yearly.weather == max(sun_yearly.weather)].index)[0].year
+
+# In which month does it rain the most?
+df.weather.value_counts()
+rain_months = df[['weather']][df.weather == 'rain'].resample('M').count()
+list(rain_months[rain_months.weather == max(rain_months.weather)].index)[0].month
+
+# which month has the most number of days with a nonzero amount of precipitation?
+preciptiation_days_monthly = df[df.precipitation>0]['precipitation'].resample('M').count()
+preciptiation_days_monthly[preciptiation_days_monthly==max(preciptiation_days_monthly)]
 
