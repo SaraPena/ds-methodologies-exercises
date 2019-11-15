@@ -74,7 +74,7 @@ yearly_rain[yearly_rain.precipitation == max(yearly_rain.precipitation)].reset_i
 df.resample('M').sum()['precipitation'].plot(color='blue')
 
 # Visualize the amount of wind over time. Choose a time interval you think is appropriate?
-df.resample('M').mean()['wind'].plot(color = 'black')
+df.resample('Q').mean()['wind'].plot(color = 'black')
 
 wind_months = df.resample('D').max().resample('M').mean()['wind']
 
@@ -97,3 +97,24 @@ list(rain_months[rain_months.weather == max(rain_months.weather)].index)[0].mont
 preciptiation_days_monthly = df[df.precipitation>0]['precipitation'].resample('M').count()
 preciptiation_days_monthly[preciptiation_days_monthly==max(preciptiation_days_monthly)]
 
+### flights_20k
+
+df = data.flights_20k()
+df.info()
+df.delay.value_counts().sort_index()[0]
+
+df['delay'][df['delay']<0] = 0
+
+df['delay'].value_counts().sort_index()
+
+df.set_index('date', inplace=True)
+
+delay_hours = df.groupby(df.index.hour).mean()['delay']
+delay_hours[delay_hours == max(delay_hours)].rename_axis('minutes')
+
+delay_day = df.groupby(df.index.weekday_name).mean()['delay']
+delay_day[delay_day == max(delay_day)]
+
+delay_month = df.groupby(df.index.month).mean()['delay']
+
+df.index.month.value_counts()
