@@ -149,7 +149,7 @@ def get_store_data(use_cache= True):
     return df
 
 # Test
-# get_store_data()
+get_store_data()
 
 def get_sales_data(use_cache=True):
     if use_cache and path.exists('sales.csv'):
@@ -180,4 +180,5 @@ def get_power_data(use_cache = True):
     power.to_csv('power.csv', index = False)
     return power
 
-get_power_data()
+# get_power_data()
+
