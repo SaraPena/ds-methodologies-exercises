@@ -46,3 +46,18 @@ def sales_by_day(df):
     return sales_by_day
 
 # sales_by_day(df)
+
+
+def prepare_power_data():
+    df = acquire.get_power_data()
+    df.rename(columns = {'Wind+Solar': 'Wind_Solar'}, inplace=True)
+    df['Date'] = pd.to_datetime(df['Date'])
+    df.sort_values('Date',inplace=True)
+    df.set_index('Date',inplace=True)
+    df['month'] = list(df.index.month)
+    df['year'] = list(df.index.year)
+    return df
+
+
+#prepare_power_data()
+
