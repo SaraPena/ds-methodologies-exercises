@@ -38,7 +38,7 @@ def prepare_store_data():
 
     return by_date
 
- df = prepare_store_data()
+# df = prepare_store_data()
 
 def sales_by_day(df):
     sales_by_day = df[['sales_total']].resample('D').sum()
