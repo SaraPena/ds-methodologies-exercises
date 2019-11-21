@@ -1,13 +1,13 @@
-
 import requests
 import warnings
 warnings.filterwarnings('ignore')
 import json
 from pprint import pprint
 
-import pandas as pd 
 
 from os import path
+
+import pandas as pd
 
 def get_item_data_from_api():
 
