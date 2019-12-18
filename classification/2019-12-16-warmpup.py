@@ -18,6 +18,8 @@ data('voteincome', show_doc=True)
 df = data('voteincome')
 df.info()
 
+df.vote.value_counts()
+
 
 # 2. Drop the `state` and `year` columns.
 df.drop(columns = ['state', 'year'], inplace = True)
