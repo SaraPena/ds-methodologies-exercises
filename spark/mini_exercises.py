@@ -15,15 +15,17 @@ def get_panda_df():
     )
     return pandas_dataframe
 
+def create_spark_df():
+    spark = pyspark.sql.SparkSession.builder.getOrCreate()
+    df = spark.createDataFrame(get_panda_df())
+    return df
+
 # 1. Spark Dataframe Basics
 #   i. Use the starter code above to create a pandas dataframe.
 #   ii. Convert the pandas dataframe to a spark dataframe. 
 #       From this point forward, do all of your work with the spark dataframe, not the pandas dataframe.
 
-spark = pyspark.sql.SparkSession.builder.getOrCreate()
-
-df = spark.createDataFrame(get_panda_df())
-df
+df = create_spark_df()
 
 #   iii. Show the first 3 rows of the dataframe.
 df.show(3)
@@ -56,7 +58,7 @@ df.select('group', col2).show(5)
 
 # 2. Column Manipulation
 #   i. Use the starter code above to re-create a spark dataframe. Store the spark dataframe in a variable named df
-df = spark.createDataFrame(get_panda_df())
+df = create_spark_df()
 df
 
 #   ii. Use .select to add 4 to the `n` column. Show the results.
@@ -105,11 +107,95 @@ df.select(
 
 # 3. Spark SQL
 #   i. Use the starter code above to recreate a spark dataframe.
-df = spark.createDataFrame(get_panda_df())
+df = create_spark_df()
 
 #   ii. Turn your dataframe into a table that can be queried with spark SQL. 
 #       Name the table `my_df`
 #       Answer the rest of the questions in this section with a spark query (`spark.sql`) against `my_df`.
 #       After each step, view  the first 7 records of the dataframe.
+
+df.createOrReplaceTempView("my_df")
+spark = pyspark.sql.SparkSession.builder.getOrCreate()
+
+
+#   iii. Write a query that shows all of the columns from your dataframe.
+spark.sql(
+    """
+    SELECT *
+    FROM my_df
+    """
+    ).show(7)
+
+#   iv. Write a query that shows just the `n` and `abool` columns from the dataframe.
+spark.sql(
+    """
+    SELECT 'n', 'abool'
+    FROM my_df
+    """
+).show(7)
+
+#   v. Write a query that shows just the `n` and `group` columns. Rename the `group` column to `g`.
+spark.sql(
+    """
+    SELECT n, group as g
+    FROM my_df
+    """
+).show(7)
+
+#   vi. Write a query that selects 'n' and creates two new columns: n2, the original n values halved, and n3: the original values minus 1.
+spark.sql(
+    """
+    SELECT n, n/2 as n2, n-1 as n3
+    FROM my_df
+    """
+).show(7)
+
+#   vii. What happens if you make a SQL syntax error in your query?
+spark.sql(
+    """
+    SELECT *,
+    FROM my_df
+    """
+)
+
+# 4. Type casting
+#   i. Use the starter code above to re-create a spark dataframe.
+df = create_spark_df()
+
+#   ii. Use .printSchema to view the datatypes in your dataframe.
+df.printSchema()
+
+#   iii. Use .dtypes to view the datatypes in your dataframe.
+df.dtypes
+
+#   iv. What is the difference between the two code samples below?
+df.abool.cast('int')
+# Shows the object created
+
+df.select(df.abool.cast('int')).show()
+# performs an action of casting the values into int's and shows the values in the abool column.
+
+#   v. Use `.select` and `.cast` to convert the abool column to an integer type. View the results.
+df.select(df.abool.cast('int')).printSchema()
+
+df.select(df.abool.cast('int')).show()
+
+#   vi. Convert the `group` column to a integer data type, and view the results. What happens?
+df.select(df.group.cast('int')).show()
+# results are null
+df.select('group').show()
+# this group is string values.
+
+#   vii. Convert the `n` column to a integer data type and view the results. What happens?
+df.select(df.n.cast('int')).show()
+df.select(df.n).show()
+# the action df.n.cast('int') truncates the value to the number before the decimal.
+
+#   viii. Convert the `abool` column to a string datatype, and view the results. What happens?
+df.select(df.abool.cast('string')).show()
+df.select(df.abool).show()
+
+
+
 
 
