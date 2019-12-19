@@ -195,6 +195,15 @@ df.select(df.n).show()
 df.select(df.abool.cast('string')).show()
 df.select(df.abool).show()
 
+# 5. Built-in Functions:
+#   i. Use the starter code above to re-create a spark dataframe.
+df = create_spark_df()
+
+#   ii. Import the necessary functions from pyspark.sql.functions.
+
+from pyspark.sql.functions import concat, sum, avg, min
+
+
 
 
 
